@@ -3,21 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Embed PDF</title>
+    <title></title>
+    <style>
+        .pdf-link {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            background: #f1f1f1;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+        }
+        .pdf-link:hover {
+            background: #ddd;
+        }
+    </style>
 </head>
 <body>
 
-    <h3>Download PDF</h3>
-    <a href="https://drive.google.com/file/d/1SHKesG9HUDWzHapibkVAwQBFfv-KpMvS/view?usp=sharing" download>
-        Click here to download the PDF
+    <h3>c</h3>
+    <button onclick="openPDF()">....-</button>
+
+    <a href="https://drive.google.com/file/d/1SHKesG9HUDWzHapibkVAwQBFfv-KpMvS/view?usp=sharing" 
+       download class="pdf-link">
+        D
     </a>
-   
-    <h3>View PDF</h3>
-    <button onclick="openPDF()">Open PDF</button>
 
     <script>
         function openPDF() {
-            window.open("https://drive.google.com/file/d/1SHKesG9HUDWzHapibkVAwQBFfv-KpMvS/view?usp=sharing", "_blank");
+            window.location.href = "https://drive.google.com/file/d/1SHKesG9HUDWzHapibkVAwQBFfv-KpMvS/view";
         }
     </script>
 
