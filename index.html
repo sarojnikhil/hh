@@ -23,71 +23,935 @@
 </head>
 <body>
 <!--
-   PRACTICAL NO: 02 
-AIM: Installation and Configuration of virtualization using KVM. 
- 
-Step 1: Download virtual box. 
-Step 2: Click on new and give name and select type as linux
-Step 3: Select the size of ram. 
-Step 4: Select VHD. 
- Step 5: Select dyanamically. 
- 
- 
-Step 6: Give the path and select size. 
- 
+  
 
-Step 7: Select the ISO in storage and click on start.\ 
- 
- 
-Step 8: Select install ubuntu.
- 
-Step 9: Enter name and password and click on continue. 
- 
-Step 10: Ubuntu has been installed successfully. 
- 
-Step 11: First make sure that all repositories are enabled, open Software & Updates 
-and mark all sources : 
- Now open a terminal and execute the following commands to install all the 
-packages needed 
- Perform Following 
-commands  
- sudo apt update 
-Step 12: #sudo apt install qemu qemu-kvm 
- 
- 
-Step 13:  #sudo apt install virt- manager 
- 
- 
- 
-Step 14: #sudo grep -c "svm\|vmx" /proc/cpuinfo 
- 
- 
- 
-Step 15: #sudo apt-get install qemu-kvm libvirt-bin bridge-utils virt-manager 
- 
- 
- 
- 
- 
-Step 16: sudo adduser <<username>> 
- 
- 
- 
-Step 17: #sudo adduser tom libvirt 
- 
- 
- 
- 
-Step 18: After running above commands, log out and log back in as tom 
- 
 
- 
- 
-Step 18: Login as tom 
- 
- 
- 
-Step 19:- # virt-manager 
+PRACTICAL 01A
+Aim :- Feature Engineering
+import numpy as np
+import pandas as pd
+titanic=pd.read_csv("titanic - titanic.csv")
+
+titanic.head()
+
+data1 = titanic.copy()
+data1.isnull()
+
+data1.isnull().sum()
+
+print('Total Passengers with values in all variables: ', data1.dropna().shape[0])
+print('Total Passengers in the Titanic: ', data1.shape[0])
+print('Percentage of data without missing values: ', data1.dropna().shape[0]/(data1.shape[0]))
+
+data1['Age_NA'] = np.where(data1['Age'].isnull(),1 ,0)
+data1.head()
+
+print(data1.Age.mean())
+(data1.Age.median())
+
+data1['Age'].fillna(data1.Age.median(), inplace=True)
+
+cor = data1.corr()
+cor
+
+import seaborn as sns
+sns.heatmap(cor, cmap='Spectral')
+
+pd.get_dummies(data1['Sex']).head()
+
+pd.concat([data1['Sex'], pd.get_dummies(data1['Sex'])], axis=1).head()
+
+PRACTICAL 1B
+import numpy as np
+import pandas as pd
+
+df = pd.read_csv('loan - loan.csv')
+df.head()
+
+df.info()
+
+df['Date'] = pd.to_datetime(df['date_issued'])
+df['Month'] = df['Date'].dt.month
+df['date_issued:year'] = df['Date'].dt.year
+df['day'] = df['Date'].dt.day
+
+df[['day','Month','date_issued:year']]
+
+df['date_issued:month'] = df['Date'].dt.month
+df['date_issued:day'] = df['Date'].dt.day
+df['date_issued:day_of_week'] = df['Date'].dt.day_of_week
+df['date_issued:day_of_year'] = df['Date'].dt.day_of_year
+
+df[['date_issued','date_issued:year','date_issued:month','date_issued:day',
+   'date_issued:day_of_week','date_issued:day_of_year']]
+
+def week_part(day):
+    if day in [1,2,3,4,5,6,7]:
+        return "Week 1"
+    elif day in [8,9,10,11,12,13,14]:
+        return "Week 2"
+    elif day in [15,16,17,18,19,20,21]:
+        return "Week 3"
+    elif day in [22,23,24,25,26,27,28]:
+        return "Week 4"
+    elif day in [29,30,31]:
+        return "Week 5"
+
+df['date:issued:hour'] = df['Date'].dt.hour
+df['date_issued:Week_No'] = df['date_issued:day'].apply(week_part)
+df[['date_issued:day','date_issued:Week_No']]
+
+df['date_issued:hour'] = df['Date'].dt.hour
+df['date_issued:Week_No'] = df['date_issued:day'].apply(week_part)
+df.head(10)
+
+df['date_issued:Week_No'].value_counts()
+
+df['date_issued:is_weekend'] = np.where(df['date_issued:day_of_week'].isin([5,6]),1,0)
+df[['date_issued','date_issued:day_of_week','date_issued:is_weekend']].head()
+
+
+PRACTICAL 1C
+import numpy as np
+import pandas as pd
+df = pd.read_csv('Sample - Superstore - Sample - Superstore.csv')
+df.columns
+
+df.info()
+
+df['Profit'] = df['Profit'].astype('int64')
+df['Segment'] = df['Segment'].astype('category')
+df.info()
+
+df['UnitPrice'] = df['Sales'] / df['Quantity']
+df[['Sales','Quantity','UnitPrice']].head()
+
+df['Sales_log'] = np.log(df['Sales'])
+df[['Sales','Sales_log']].head()
+
+df['Sales_log2']=np.log2(df['Sales'])
+df[['Sales','Sales_log2']].head()
+df['Sales_log10']=np.log10(df['Sales'])
+df[['Sales','Sales_log10']].head()
+
+df['Sales_rep'] = np.reciprocal(df['Sales'])
+df[['Sales','Sales_rep']].head()
+
+df['Quantity_sq'] =np.power(df['Quantity'],2)
+df[['Quantity','Quantity_sq']].head()
+
+df['Sales_sqrt'] = np.sqrt(df['Sales'])
+df[['Sales','Sales_sqrt']].head()
+
+
+
+
+PRACTICAL 2
+Aim :- Linear Regression
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+
+from google.colab import drive
+drive.mount('/content/drive')
+
+path = "/content/drive/MyDrive/Ecommerce Customers.csv"
+custs = pd.read_csv(path)
+
+custs.head()
+custs.describe()
+custs.info()
+
+g = sns.jointplot(x=custs['Time on Website'], y=custs['Yearly Amount Spent'])
+your_name = "" 
+your_roll = "/Div-A TYCS" 
+title_text = f"Jointplot by {your_name} (Roll No/Division/Class: {your_roll})"
+g.fig.suptitle(title_text, y=1.05)  # Adjust y to control title position
+plt.show()
+
+g1 = sns.jointplot(x=custs['Time on App'], y=custs['Yearly Amount Spent'])
+your_name = "Raj Gangurde"  # Replace with your actual name
+your_roll = "9120/Div-A TYCS"  # Replace with your actual roll number
+title_text = f"Jointplot by {your_name} (Roll No/Division/Class: {your_roll})"
+g1.fig.suptitle(title_text, y=1.05)  # Adjust y to control title position
+plt.show()
+
+g2 = sns.jointplot(x=custs['Time on App'], y=custs['Yearly Amount Spent'], kind='kde')
+your_name = "Raj Gangurde"  # Replace with your actual name
+your_roll = "9120/Div-A TYCS"  # Replace with your actual roll number
+title_text = f"Jointplot by {your_name} (Roll No/Division/Class: {your_roll})"
+g2.fig.suptitle(title_text, y=1.05)  # Adjust y to control title position
+plt.show()
+
+g3 = sns.pairplot(custs)
+# Add the title with your name and roll number
+your_name = "Raj Gangurde"  # Replace with your actual name
+your_roll = "9120/Div-A TYCS"  # Replace with your actual roll number
+title_text = f"Pairplot by {your_name} (Roll No/Division/Class: {your_roll})"
+# Access the figure object from the 'g' variable and add the title
+g3.fig.suptitle(title_text, y=1.05)
+
+X = custs[['Avg. Session Length', 'Time on App','Time on Website', 'Length of Membership']]
+y = custs['Yearly Amount Spent']
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=120)
+
+X_train
+X_test
+y_train
+y_test
+
+from sklearn.linear_model import LinearRegression
+lm = LinearRegression()
+lm.fit(X_train, y_train)
+
+print("Coefficients: \n", lm.coef_)
+
+print(lm.intercept_)
+
+predictions = lm.predict(X_test)
+
+plt.scatter(y_test, predictions)
+plt.xlabel('Y Test') #Put your name here...............
+plt.ylabel('Predicted Y')
+
+from sklearn import metrics
+print("MAE: ", metrics.mean_absolute_error(y_test, predictions))
+print("MSE: ", metrics.mean_squared_error(y_test, predictions))
+print("RMSE: ", np.sqrt(metrics.mean_squared_error(y_test, predictions)))
+
+sns.distplot((y_test-predictions), bins=50)
+your_name = "Raj Gangurde"  # Replace with your actual name
+your_roll = "9120/Div-A TYCS"  # Replace with your actual roll number
+title_text = f"Distribution Plot by {your_name} (Roll No/Division/Class: {your_roll})"
+plt.title(title_text)
+plt.show()
+
+coeffecients = pd.DataFrame(lm.coef_, X.columns)
+coeffecients.columns = ['Coeffecient']
+coeffecients
+
+
+
+
+PRACTICAL 03
+Aim :- Comparison Betwen linear, polynomial , lasso rigid regression
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression, Lasso, Ridge
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import mean_squared_error
+df = pd.read_csv('Ecommerce Customers.csv')
+df.head()
+
+X = df[['Time on Website']]
+y = df['Yearly Amount Spent']
+
+#Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=52)
+
+#Polynomial Regression
+degree = 2 #You can Change the degree of the polynomial
+poly_features = PolynomialFeatures(degree=degree, include_bias=False)
+X_poly = poly_features.fit_transform(X_train)
+poly_reg = LinearRegression()
+poly_reg.fit(X_poly, y_train)
+
+X_test_poly = poly_features.transform(X_test)
+poly_pred = poly_reg.predict(X_test_poly)
+
+#Linear Regression
+linear_reg = LinearRegression()
+linear_reg.fit(X_train, y_train)
+linear_pred = linear_reg.predict(X_test)
+
+#Lasso Regression
+alpha_lasso = 0.1 #You can change the regularization strength
+lasso_reg = Lasso(alpha=alpha_lasso)
+lasso_reg.fit(X_train,y_train)
+lasso_pred = lasso_reg.predict(X_test)
+
+#Ridge Regression
+alpha_ridge = 1.0 #You can change the regularization strength
+ridge_reg = Ridge(alpha=alpha_ridge)
+ridge_reg.fit(X_train, y_train)
+ridge_pred = ridge_reg.predict(X_test)
+
+#Evaluate and compare the models
+print("Linear Regression MSE: ", mean_squared_error(y_test, linear_pred))
+print("Polynomial Regression (Degree{degree})MSE:", mean_squared_error(y_test, poly_pred))
+print("Lasso Regression (Alpha {alpha_lasso}) MSE:", mean_squared_error(y_test, lasso_pred))
+print("Ridge Regression (Alpha {alpha ridge}) MSE:", mean_squared_error(y_test, ridge_pred))
+
+#Plot the results
+plt.scatter(X_test, y_test, color='black', label='Actual data')
+plt.plot(X_test, linear_pred, label='Linear Regression')
+plt.legend()
+plt.xlabel('Time on Website')
+plt.ylabel('Yearly Amount Spent')
+plt.title('Compariision of Regression Models 9152 - Kushagra Padwal')
+plt.show()
+
+plt.scatter(X_test, y_test, color='black',label='Actual data')
+plt.plot(X_test, poly_pred, label=f'Polynomial Regression (Degree {degree})')
+plt.legend()
+plt.xlabel('Time on Website')
+plt.ylabel('Yearly Amount Spent')
+plt.title('Comparision of Regression Models 9152 - Kushagra Padwal')
+plt.show()
+
+plt.scatter(X_test, y_test, color='black',label='Actual data')
+plt.plot(X_test, poly_pred, label=f'Polynomial Regression (Degree {degree})')
+plt.legend()
+plt.xlabel('Time on Website')
+plt.ylabel('Yearly Amount Spent')
+plt.title('Comparision of Regression Models 9152 - Kushagra Padwal')
+plt.show()
+
+#Plot the results
+plt.scatter(X_test, y_test, color='black', label='Actual data')
+plt.plot(X_test, lasso_pred, label='Lasso Regression (Alpha {alpha_lasso})')
+plt.legend()
+plt.xlabel('Time on Website')
+plt.ylabel('Yearly Amount Spent')
+plt.title('Comparison of Regression Models 9152 - Kushagra Padwal')
+plt.show()
+
+#Plot the results
+plt.scatter(X_test, y_test, color='black', label='Actual data')
+plt.plot(X_test, lasso_pred, label='Ridge Regression (Alpha {alpha_ridge})')
+plt.legend()
+plt.xlabel('Time on Website')
+plt.ylabel('Yearly Amount Spent')
+plt.title('Comparison of Regression Models 9152 - Kushagra Padwal')
+plt.show()
+
+
+
+PRACTICAL 04
+Aim :- Support Vector Machine (SVM)
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+df = pd.read_csv('iphone_purchase_records.csv')
+df.head()
+
+df['log_Age'] = np.log(df['Age'])
+df['log_Sal'] = np.log(df['Salary'])
+
+plt.figure(figsize=(8,4))
+sns.swarmplot(y='Salary',x="Purchase Iphone", hue="Gender", data=df)
+plt.title("9152")
+
+plt.figure(figsize=(8,4))
+sns.swarmplot(x="Gender", hue = "Purchase Iphone", data =df)
+plt.title('9152')
+
+plt.figure(figsize=(8,4))
+sns.swarmplot(x="Age", y="Salary", hue = "Purchase Iphone", data=df)
+plt.title('9152')
+
+X = np.array(df[['Gender', 'log_Age', 'log_Sal']])
+y = np.array(df['Purchase Iphone'])
+
+from sklearn.preprocessing import LabelEncoder
+LabelEncoder_gender = LabelEncoder()
+X[:,0] = LabelEncoder_gender.fit_transform(X[:,0])
+X
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.2, random_state=9152)
+
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test) 
+
+X_train[:5]
+X_test[:5]
+
+from sklearn.svm import SVC
+classifier = SVC(kernel = "linear", random_state=52)
+classifier.fit(X_train, y_train)
+
+from sklearn import metrics
+cm = metrics.confusion_matrix(y_test, y_pred)
+print(cm)
+accuracy = metrics.accuracy_score(y_test, y_pred)
+print('Accuracy Score: ', accuracy)
+precision = metrics.precision_score(y_test, y_pred)
+print('Precision Score: ', precision)
+recall = metrics.recall_score(y_test, y_pred)
+print('Recall Score: ', recall)
+
+
+
+
+PRACTICAL 05
+Aim :- K-nearest Neighbors
+from sklearn import datasets
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report, confusion_matrix
+
+iris = datasets.load_iris()
+irs = pd.DataFrame(iris.data, columns = iris.feature_names)
+irs['class'] = iris.target
+print(irs)
+
+print(irs.describe())
+x = irs.iloc[:, :-1].values
+y = irs.iloc[:, 4].values
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+scaler = StandardScaler()
+scaler.fit(x_train)
+
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+classifier = KNeighborsClassifier(n_neighbors=5)
+classifier.fit(x_train, y_train)
+
+y_preds = classifier.predict(x_test)
+print(confusion_matrix(y_test, y_preds))
+print(classification_report(y_test, y_preds))y_preds = classifier.predict(x_test)
+print(confusion_matrix(y_test, y_preds))
+print(classification_report(y_test, y_preds))
+
+
+
+PRAC6
+Aim :- K - Means Clustering 
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from mpl_toolkits.mplot3d import Axes3D
+%matplotlib inline
+from os.path import pathsep
+import pandas as pd
+path = "/content/Mall_Customers.csv"
+data = pd.read_csv(path)
+data.head()
+data.drop(['CustomerID','Gender'], axis=1).corr()
+# Drop non-numeric columns like CustomerID and Gender before calculating correlation.
+
+#Distribution of Annual Income
+plt.figure(figsize=(10, 6))
+sns.set(style = 'whitegrid')
+sns.distplot(data['Annual Income (k$)'])
+plt.title('9219 Suhesh (k$)', fontsize = 20)
+plt.xlabel('Range of Annual Income (k$)')
+plt.ylabel('Count')
+#Distribution of Age
+plt.figure(figsize=(10, 6))
+sns.set(style = 'whitegrid')
+sns.distplot(data['Age'])
+plt.title('9219 Suhesh', fontsize = 20)
+plt.xlabel('Range of Age')
+plt.ylabel('Count')
+#Distribution of spending score
+plt.figure(figsize=(10, 6))
+sns.set(style = 'whitegrid')
+sns.distplot(data['Spending Score (1-100)'])
+plt.title('9219 Suhesh Distribution of Spending Score (1-100)', fontsize = 20)
+plt.xlabel('Range of Spending Score (1-100)')
+plt.ylabel('Count')
+genders = data.Gender.value_counts()
+sns.set_style("darkgrid")
+plt.figure(figsize=(10, 4))
+sns.barplot(x=genders.index, y=genders.values)
+plt.show()
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x = 'Age', y = 'Annual Income (k$)', hue="Gender", data = data, s = 60)
+plt.xlabel('Age'), plt.ylabel('Annual Income (k$)')
+plt.title('9219 Suhesh Age vs Annual Income w.r.t Gender')
+plt.legend()
+plt.show()
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x = 'Age', y = 'Annual Income (k$)', hue="Gender", data = data, s = 60)
+plt.xlabel('Age'), plt.ylabel('Annual Income (k$)')
+plt.title('9219 Suhesh Age vs Annual Income w.r.t Gender')
+plt.legend()
+plt.show()
+age18_25 = data.Age[(data.Age >= 18) & (data.Age <= 25)]
+age26_35 = data.Age[(data.Age >= 26) & (data.Age <= 35)]
+age36_45 = data.Age[(data.Age >= 36) & (data.Age <= 45)]
+age46_55 = data.Age[(data.Age >= 46) & (data.Age <= 55)]
+age55above = data.Age[data.Age >= 56]
+
+x = ['18-25', '26-35', '36-45', '46-55', '55+']
+y = [len(age18_25.values), len(age26_35.values), len(age36_45.values), len(age46_55.values), len(age55above.values)]
+plt.figure(figsize=(10,6))
+sns.barplot(x=x, y=y)
+plt.title('9219 Suhesh Customer and Ages Barplot')
+plt.xlabel('Age')
+plt.ylabel('Number of Customers')
+plt.show()
+ss1_20 = data["Spending Score (1-100)"][(data["Spending Score (1-100)"] >= 1) & (data["Spending Score (1-100)"] <= 20)]
+ss21_40 = data["Spending Score (1-100)"][(data["Spending Score (1-100)"] >= 21) & (data["Spending Score (1-100)"] <= 40)]
+ss41_60 = data["Spending Score (1-100)"][(data["Spending Score (1-100)"] >= 41) & (data["Spending Score (1-100)"] <= 60)]
+ss61_80 = data["Spending Score (1-100)"][(data["Spending Score (1-100)"] >= 61) & (data["Spending Score (1-100)"] <= 80)]
+ss81_100 = data["Spending Score (1-100)"][(data["Spending Score (1-100)"] >= 81) & (data["Spending Score (1-100)"] <= 100)]
+
+score_x = ['1-20', '21-40', '41-60', '61-80', '81-100']
+score_y = [len(ss1_20.values), len(ss21_40.values), len(ss41_60.values), len(ss61_80.values), len(ss81_100.values)]
+
+plt.figure(figsize=(12,6))
+sns.barplot(x=score_x, y=score_y, palette="Set2")
+plt.title("9219 Suhesh Spending Scores")
+plt.xlabel("Score")
+plt.ylabel("Number of Customer Having the Spending Score In That Range")
+plt.show()
+
+ai0_30 = data["Annual Income (k$)"][(data["Annual Income (k$)"] >= 0) & (data["Annual Income (k$)"] <= 30)]
+ai31_60 = data["Annual Income (k$)"][(data["Annual Income (k$)"] >= 31) & (data["Annual Income (k$)"] <= 60)]
+ai61_90 = data["Annual Income (k$)"][(data["Annual Income (k$)"] >= 61) & (data["Annual Income (k$)"] <= 90)]
+ai91_120 = data["Annual Income (k$)"][(data["Annual Income (k$)"] >= 91) & (data["Annual Income (k$)"] <= 120)]
+ai121_150 = data["Annual Income (k$)"][(data["Annual Income (k$)"] >= 121) & (data["Annual Income (k$)"] <= 150)]
+
+income_x = ['0-30,000$', '31-60,000$', '61-90,000$', '91-120,000$', '120,001-150,000$']
+income_y = [len(ai0_30.values), len(ai31_60.values), len(ai61_90.values), len(ai91_120.values), len(ai121_150.values)]
+
+plt.figure(figsize=(15,5))
+sns.barplot(x=income_x, y=income_y, palette="nipy_spectral_r")
+plt.title("9219 Suhesh Annual Incomes")
+plt.xlabel("Income")
+plt.ylabel("Number of Customer")
+plt.show()
+
+data
+
+# We take just the Annual Income and Spending score
+df1 = data[["CustomerID", "Gender", "Age", "Annual Income (k$)", "Spending Score (1-100)"]]
+
+X = df1[["Annual Income (k$)", "Spending Score (1-100)"]]
+
+# The input data
+X.head()
+
+plt.figure(figsize=(10,6))
+sns.scatterplot(x="Annual Income (k$)", y="Spending Score (1-100)", data=X, s=60)
+plt.xlabel("Annual Income (k$)")
+plt.ylabel("Spending Score (1-100)")
+plt.title("9219 Suhesh Spending Score (1-100) vs Annual Income (k$)")
+plt.show()
+
+from sklearn.cluster import KMeans
+
+wcss = []
+
+for i in range(1, 11):
+    km = KMeans(n_clusters=i)
+    km.fit(X)
+    wcss.append(km.inertia_)
+
+plt.figure(figsize=(12,6))
+plt.plot(range(1, 11), wcss)
+plt.plot(range(1, 11), wcss, linewidth=2, color="red", marker="8")
+plt.xlabel("K value")
+plt.xticks(range(1, 11))
+plt.ylabel("WCSS")
+plt.show()
+
+#taking 5 clusters
+km1=KMeans(n_clusters=5)
+
+#Fitting the input data
+km1.fit(X)
+
+#PREDICTING THE LABELS OF INPUT DATA
+y=km1.predict(X)
+
+#adding the labels to a column named label
+df1["label"]=y
+
+#the new dataframe with the clustering done
+df1.head()
+
+#Scatterplot of the clusters
+
+plt.figure(figsize=(10,6))
+sns.scatterplot(x="Annual Income (k$)", y="Spending Score (1-100)", hue="label", palette=['green','orange','brown','dodgerblue','red'], legend='full', data=df1, s=60)
+
+plt.xlabel("Annual Income (k$)")
+plt.ylabel("Spending Score (1-100)")
+plt.title("9219 Suhesh Spending Score (1-100) vs Annual Income (k$)")
+plt.show()
+
+cust0=df1[df1["label"]==0]
+print('number of customer in 0th group=',len(cust0))
+print('they are -',cust0["CustomerID"].values)
+
+print("--------------------------------------------")
+cust1=df1[df1["label"]==1]
+print('number of customer in 1th group=',len(cust1))
+print('they are -',cust1["CustomerID"].values)
+
+print("--------------------------------------------")
+cust2=df1[df1["label"]==2]
+print('number of customer in 2th group=',len(cust2))
+print('they are -',cust2["CustomerID"].values)
+
+print("--------------------------------------------")
+cust3=df1[df1["label"]==3]
+print('number of customer in 3th group=',len(cust3))
+print('they are -',cust3["CustomerID"].values)
+
+print("--------------------------------------------")
+cust4=df1[df1["label"]==4]
+print('number of customer in 4th group=',len(cust4))
+print('they are -',cust4["CustomerID"].values)
+
+
+
+Prac 7
+Aim :- Hierarchical Clustering (Agglomerative Single Linkage)
+%matplotlib inline
+import matplotlib.pyplot as plt
+import numpy as np
+x = np.array([
+    [7, 8], [12, 20], [17, 23], [26, 15], [32, 37],
+    [87, 75], [73, 85], [62, 80], [73, 60], [87, 96]
+])
+labels = range(1, 11)
+plt.figure(figsize=(10, 7))
+plt.subplots_adjust(bottom=0.1)
+plt.scatter(x[:, 0], x[:, 1], label='True Position')
+
+for label, x, y in zip(labels, x[:, 0], x[:, 1]):
+    plt.annotate(
+        label, xy=(x, y), xytext=(-3, 3),
+        textcoords='offset points', ha='right', va='bottom'
+    )
+plt.title('9219 Suhesh')
+plt.show()
+from scipy.cluster.hierarchy import dendrogram, linkage
+from matplotlib import pyplot as plt
+
+# Re-define 'x' if it has been modified or re-assigned
+x = np.array([
+    [7, 8], [12, 20], [17, 23], [26, 15], [32, 37],
+    [87, 75], [73, 85], [62, 80], [73, 60], [87, 96]
+])
+
+linked = linkage(x, 'average')
+labellist = range(1, 11)
+
+plt.figure(figsize=(5, 5))
+dendrogram(
+    linked, orientation='top', labels=labellist,
+    distance_sort='descending', show_leaf_counts=True
+)
+plt.show()
+from sklearn.cluster import AgglomerativeClustering
+
+# Remove the 'affinity' parameter since it's not needed with 'ward' linkage.
+cluster = AgglomerativeClustering(n_clusters=3, linkage='ward')
+cluster.fit_predict(x) # Change 'X' to 'x' assuming you want to use the data defined earlier.
+
+
+Prac 8
+Aim :- Apriori Algorithm
+!pip install apyori
+import pandas as pd
+import numpy as np
+from apyori import apriori
+import pandas as pd
+path="/content/Market_Basket_Optimisation.csv"
+df = pd.read_csv(path)
+df.head()
+df.fillna(0,inplace=True)
+df.head()
+
+transactions = []
+for i in range(len(df)):
+    transactions.append([str(df.iloc[i, j]) for j in range(20) if str(df.iloc[i, j]) != '0'])
+
+transactions[0]
+
+transactions[1]
+
+rules = apriori(transactions, min_support=0.003, min_confidence=0.2, min_lift=3, min_length=2)
+
+Results = list(rules)
+Results
+
+df_results = pd.DataFrame(Results)
+
+df_results.head()
+
+support = df_results.support
+
+first_values= []
+second_values= []
+third_values= []
+fourth_values= []
+
+for i in range(df_results.shape[0]):
+  single_list = df_results['ordered_statistics'][i][0]
+  first_values.append(list(single_list[0]))
+  second_values.append(list(single_list[1]))
+  third_values.append(single_list[2])
+  fourth_values.append(single_list[3])
+
+lhs = pd.DataFrame(first_values)
+rhs = pd.DataFrame(second_values)
+confidance = pd.DataFrame(third_values, columns=['Confidance'])
+lift = pd.DataFrame(fourth_values, columns=['Lift'])
+
+df_final = pd.concat([lhs, rhs, support, confidance, lift], axis=1) # Pass all DataFrames as a list
+df_final
+
+df_final.fillna(value=' ', inplace=True)
+df_final.head()
+
+df_final.columns = ['lhs',1,'rhs',2,3,4,'support','confidance','lift']
+df_final.head()
+
+# Assuming lhs, rhs, support, confidance, lift are DataFrames as before
+df_final = pd.concat([lhs, rhs, support, confidance, lift], axis=1)
+
+# Drop the unnecessary columns right after concatenation using their index
+df_final = df_final[[0, 1, 'support', 'Confidance', 'Lift']]
+
+# Rename the columns for clarity
+df_final.columns = ['lhs', 'rhs', 'support', 'confidance', 'lift']
+
+# Convert 'lhs' and 'rhs' columns to strings
+df_final['lhs'] = df_final['lhs'].astype(str)
+df_final['rhs'] = df_final['rhs'].astype(str)
+
+#Now df_final should have the desired columns and data types
+df_final.head()
+
+df_final.head()
+
+df_final.drop(columns=[1,2,3,4],inplace=True)
+df_final.head()
+
+df_final.sort_values('lift', ascending=False).head(10)
+
+
+
+Prac 9
+Aim :- Probablistic model naive based
+import warnings
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+from scipy.stats.stats import pearsonr
+from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, recall_score, precision_score
+
+def cross_validate(estimator, train, validation):
+    X_train = train[0]
+    Y_train = train[1]
+    X_val = validation[0]
+    Y_val = validation[1]
+
+    train_predictions = classifier.predict(X_train)
+    train_accuracy = accuracy_score(train_predictions, Y_train)
+    train_recall = recall_score(train_predictions, Y_train)
+    train_precision = precision_score(train_predictions, Y_train)
+
+    val_predictions = classifier.predict(X_val)
+    val_accuracy = accuracy_score(val_predictions, Y_val)
+    val_recall = recall_score(val_predictions, Y_val)
+    val_precision = precision_score(val_predictions, Y_val)
+
+    print('Model metrics')
+    print('Accuracy Train: %.2f, Validation: %.2f' % (train_accuracy, val_accuracy))
+    print('Recall   Train: %.2f, Validation: %.2f' % (train_recall, val_recall))
+    print('Precision Train: %.2f, Validation: %.2f' % (train_precision, val_precision))
+
+import pandas as pd
+# Check if the file path is correct. Sometimes file names are case sensitive.
+# If you are unsure of file name, navigate to the path in google colab and copy the file name from there
+path = "/content/train (1).csv"
+# Check if this file exists by navigating to this path in google colab interface
+train_raw = pd.read_csv(path)
+
+import pandas as pd
+#Check if the file path is correct. Sometimes file names are case sensitive.
+# If you are unsure of file name, navigate to the path in google colab and copy the file name from there
+path = "/content/test.csv"
+# Check if this file exists by navigating to this path in google colab interface
+test_raw = pd.read_csv(path)
+
+test_ids = test_raw['PassengerId'].values
+
+# Join data to analyse and process the set as one.
+train_raw['train'] = 1
+test_raw['train'] = 0
+# Use pd.concat instead of append
+data = pd.concat([train_raw, test_raw], ignore_index=True, sort=False)
+
+data.head()
+
+data.describe()
+
+features = ['Age', 'Embarked', 'Fare', 'Parch', 'Pclass', 'Sex', 'SibSp']
+target = 'Survived'
+
+data = data[features + [target] + ['train']]
+# Categorical values need to be transformed into numeric.
+data['Sex'] = data['Sex'].replace(['female', 'male'], [0, 1])
+data['Embarked'] = data['Embarked'].replace(['S', 'C', 'Q'], [1, 2, 3])
+data['Age'] = pd.qcut(data['Age'], 10, labels=False)
+
+train = data.query('train == 1')
+test = data.query('train == 0')
+
+# Drop missing values from the train set.
+train.dropna(axis=0, inplace=True)
+labels = train[target].values
+
+train.head()
+
+import seaborn as sns
+columns = train[features + [target]].columns.tolist()
+nColumns = len(columns)
+result = pd.DataFrame(np.zeros((nColumns, nColumns)), columns=columns)
+
+# Apply Pearson correlation on each pair of features.
+for col_a in range(nColumns):
+    for col_b in range(nColumns):
+        result.iloc[col_a, col_b] = pearsonr(train.loc[:, columns[col_a]], train.loc[:, columns[col_b]])[0]
+
+fig, ax = plt.subplots(figsize=(10, 10))
+ax = sns.heatmap(result, yticklabels=columns, vmin=-1, vmax=1, annot=True, fmt='.2f', linewidths=.2)
+ax.set_title('9219 Suhesh PCC - Pearson correlation coefficient')
+plt.show()
+
+continuous_numeric_features = ['Age', 'Fare', 'Parch', 'SibSp']
+for feature in continuous_numeric_features:
+    sns.distplot(train[feature])
+    plt.title("9219 Suhesh")
+    plt.show()
+
+# Instead of dropping 'Pclass', check if it exists before dropping
+if 'Pclass' in train.columns:
+    train.drop(['Pclass'], axis=1, inplace=True)
+if 'Pclass' in test.columns:
+    test.drop(['Pclass'], axis=1, inplace=True)
+
+X_train, X_val, Y_train, Y_val = train_test_split(train, labels, test_size=0.2, random_state=1)
+
+X_train.head()
+
+X_train, X_train2, Y_train, Y_train2 = train_test_split(X_train, Y_train, test_size=0.3, random_state=12)
+
+classifier = GaussianNB()
+
+classifier.fit(X_train2, Y_train2)
+
+print("Metrics with only 30% of train data")
+cross_validate(classifier, (X_train, Y_train), (X_val, Y_val))
+
+# In cell ipython-input-40-e5a6872b84cc, change the variable names to X_train1 and Y_train1
+X_train, X_train1, Y_train, Y_train1 = train_test_split(X_train, Y_train, test_size=0.3, random_state=12)
+
+# In cell ipython-input-42-e5a6872b84cc, change the variables to fit on the initial split
+classifier.fit(X_train, Y_train)
+
+# In cell ipython-input-44-e5a6872b84cc, call partial_fit with the correct variable names
+classifier.partial_fit(X_train1, Y_train1)
+
+print("Metrics with the remaining 70% of train data")
+cross_validate(classifier, (X_train, Y_train), (X_val, Y_val))
+
+print("Probability of each class")
+print('Survive = 0: %.2f' % classifier.class_prior_[0])
+print('Survive = 1: %.2f' % classifier.class_prior_[1])
+
+print("Probability of each class")
+print('Survive = 0: %.2f' % classifier.class_prior_[0])
+print('Survive = 1: %.2f' % classifier.class_prior_[1])
+
+print("Mean of each feature per class")
+print('Survive = 0: %s' % classifier.theta_[0])
+print('Survive = 1: %s' % classifier.theta_[1])
+
+print("Variance of each feature per class")
+print('Survive = 0: %s' % classifier.var_[0]) # Change sigma_ to var_
+print('Survive = 1: %s' % classifier.var_[1]) # Change sigma_ to var_
+
+test.fillna(test.mean(), inplace=True)
+test_predictions = classifier.predict(test)
+submission = pd.DataFrame({'PassengerId': test_ids})
+submission['Survived'] = test_predictions.astype('int')
+submission.to_csv('submission.csv', index=False)
+submission.head(10)
+
+
+
+Prac 10
+Aim :- Random Forest Algorithm 
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+import pandas as pd
+path = "/heart.csv"
+heart_disease = pd.read_csv(path)
+
+heart_disease.head()
+
+# Create X "features matrix"
+X = heart_disease.drop("target", axis=1)
+
+# Create y "labels"
+y = heart_disease["target"]
+
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier()
+
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier()
+
+# keep default hyperparameters
+clf.get_params()
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+clf.fit(X_train, y_train);
+
+y_preds = clf.predict(X_test)
+y_preds
+
+y_test
+
+clf.score(X_train, y_train)
+
+clf.score(X_test, y_test)
+
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+print(classification_report(y_test, y_preds))
+
+confusion_matrix(y_test, y_preds)
+
+accuracy_score(y_test, y_preds)
+
+np.random.seed(42)
+for i in range(1, 22, 1):
+    print(f"trying model with {i} estimators...")
+    clf = RandomForestClassifier(n_estimators=i).fit(X_train, y_train)
+    print(f"model accuracy on test set: {clf.score(X_test, y_test) * 100 :.2f}%")
+    print(" ")
+
+
  
 
  
@@ -107,9 +971,9 @@ Step 19:- # virt-manager
     c
 </a>
 
-<a href="https://drive.google.com/file/d/181c8O8syI7TxvcFpRZMg7hDUI45OjgX8/view?usp=sharing" 
+<a href="https://drive.google.com/file/d/198MWROo6S5n65ej98UsYhnAOC9MxHUz7/view?usp=sharing" 
        download class="pdf-link">
-        A
+        n
     </a>
     <script>
         function openPDF() {
